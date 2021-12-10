@@ -64,7 +64,7 @@ var queryType = graphql.NewObject(
 		Name: "Query",
 		Fields: graphql.Fields{
 			/* Get (read) single product by id
-			   http://localhost:8080/product?query={product(id:1){name,info,price}}
+			   http://localhost:8080/products?query={product(id:1){name,info,price}}
 			*/
 			"product": &graphql.Field{
 				Type:        productType,
@@ -88,7 +88,7 @@ var queryType = graphql.NewObject(
 				},
 			},
 			/* Get (read) product list
-			   http://localhost:8080/product?query={list{id,name,info,price}}
+			   http://localhost:8080/products?query={list{id,name,info,price}}
 			*/
 			"list": &graphql.Field{
 				Type:        graphql.NewList(productType),
@@ -104,7 +104,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Mutation",
 	Fields: graphql.Fields{
 		/* Create new product item
-		http://localhost:8080/product?query=mutation+_{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
+		http://localhost:8080/products?query=mutation+_{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
 		*/
 		"create": &graphql.Field{
 			Type:        productType,
@@ -134,7 +134,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 		},
 
 		/* Update product by id
-		   http://localhost:8080/product?query=mutation+_{update(id:1,price:3.95){id,name,info,price}}
+		   http://localhost:8080/products?query=mutation+_{update(id:1,price:3.95){id,name,info,price}}
 		*/
 		"update": &graphql.Field{
 			Type:        productType,
@@ -179,7 +179,7 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 		},
 
 		/* Delete product by id
-		   http://localhost:8080/product?query=mutation+_{delete(id:1){id,name,info,price}}
+		   http://localhost:8080/products?query=mutation+_{delete(id:1){id,name,info,price}}
 		*/
 		"delete": &graphql.Field{
 			Type:        productType,
@@ -225,8 +225,8 @@ func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 }
 
 func main() {
-	http.HandleFunc("/product", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Ingresa")
+	http.HandleFunc("/products", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("start")
 		result := executeQuery(r.URL.Query().Get("query"), schema)
 		json.NewEncoder(w).Encode(result)
 	})
