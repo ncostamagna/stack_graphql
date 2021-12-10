@@ -1,6 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"log"
+
 	"github.com/graphql-go/graphql"
 )
 
@@ -105,14 +109,14 @@ func main() {
 			// tutorial we want to retrieve
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
-					Type: graphql.Int,
+					Type: graphql.Int, // envio el argumento ID
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// take in the ID argument
 				id, ok := p.Args["id"].(int)
 				if ok {
-					// Parse our tutorial array for the matching id
+					// Recorro los tutoriales y devuelvo el del ID del argumento
 					for _, tutorial := range tutorials {
 						if int(tutorial.ID) == id {
 							// return our tutorial
@@ -133,4 +137,56 @@ func main() {
 			},
 		},
 	}
+
+	rootQuery := graphql.ObjectConfig{
+		Name:   "RootQuery",
+		Fields: fields,
+	}
+
+	schemaConfig := graphql.SchemaConfig{
+		Query: graphql.NewObject(rootQuery),
+	}
+
+	schema, err := graphql.NewSchema(schemaConfig)
+	if err != nil {
+		log.Fatalf("failed to create new schema, error: %v", err)
+	}
+
+	// Query
+	query := `
+    {
+        list {
+            id
+            title
+            comments {
+                body
+            }
+            author {
+                Name
+                Tutorials
+            }
+        }
+    }
+`
+
+	/*
+	   query := `
+	       {
+	           tutorial(id:1) {
+	               title
+	               author {
+	                   Name
+	                   Tutorials
+	               }
+	           }
+	       }
+	   `*/
+
+	params := graphql.Params{Schema: schema, RequestString: query}
+	r := graphql.Do(params)
+	if len(r.Errors) > 0 {
+		log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
+	}
+	rJSON, _ := json.Marshal(r)
+	fmt.Printf("%s \n", rJSON) // {“data”:{“hello”:”world”}}
 }
