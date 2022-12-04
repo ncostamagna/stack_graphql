@@ -31,3 +31,18 @@ go run github.com/99designs/gqlgen init
 
 go run server.go
 ```
+
+
+# Client
+
+## Insomnia
+
+```sh
+Body: GraphQL
+
+# Get products
+URL: http://localhost:8080/products?query={list{id,name,info,price}} 
+
+# Create product
+URL: http://localhost:8080/products?query=mutation{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
+```
