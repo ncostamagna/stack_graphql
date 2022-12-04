@@ -1,4 +1,4 @@
-module github.com/ncostamagna/graphql_example_go
+module github.com/ncostamagna/stack_graphql
 
 go 1.17
 

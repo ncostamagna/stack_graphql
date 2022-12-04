@@ -18,18 +18,8 @@ Is an application web with graphQL without any external packages (without gorill
 
 
 ## gplgen
-repo: https://github.com/99designs/gqlgen
 ```sh
-mkdir example
-cd example
-go mod init example
 
-printf '// +build tools\npackage tools\nimport _ "github.com/99designs/gqlgen"' | gofmt > tools.go
-go mod tidy
-
-go run github.com/99designs/gqlgen init
-
-go run server.go
 ```
 
 
@@ -45,4 +35,19 @@ URL: http://localhost:8080/products?query={list{id,name,info,price}}
 
 # Create product
 URL: http://localhost:8080/products?query=mutation{create(name:"Inca Kola",info:"Inca Kola is a soft drink that was created in Peru in 1935 by British immigrant Joseph Robinson Lindley using lemon verbena (wiki)",price:1.99){id,name,info,price}}
+```
+
+# gplgen
+```sh
+mkdir example
+cd example
+go mod init example
+
+go get -d github.com/99designs/gqlgen
+
+printf '// +build tools\npackage tools\nimport _ "github.com/99designs/gqlgen"' | gofmt > tools.go
+go mod tidy
+
+# create a new project
+go run github.com/99designs/gqlgen init
 ```
